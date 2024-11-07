@@ -10,9 +10,9 @@ jobs:
       
       - name: Download teacher's test repository
         env:
-          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.ORG_PAT_TOKEN }}
         run: |
-          git clone https://${{ secrets.PAT_TOKEN }}@github.com/IcensRAGHomework/assignment-tests-.git temp-tests
+          git clone https://${{ secrets.ORG_PAT_TOKEN }}@github.com/IcensRAGHomework/assignment-tests-.git temp-tests
           
       - name: Install dependencies
         run: pip install -r requirements.txt
