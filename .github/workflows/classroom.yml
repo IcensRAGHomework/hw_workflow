@@ -66,14 +66,23 @@ jobs:
           else
             echo "SCORE=0" >> $GITHUB_ENV
           fi
-          
+
+      - name: Debug Python Environment
+        run: |
+          echo "Python Version:"
+          .venv/bin/python --version || echo "Python binary not found!"
+          echo "Installed packages:"
+          .venv/bin/pip freeze || echo "pip freeze failed!"
+          echo "Listing .venv directory:"
+          ls -la .venv || echo ".venv directory not found!"
+    
       # Step 6-1: Run tests and calculate score By autograding
       - name: Run tests and calculate score By autograding
         id: PytestCase
         uses: classroom-resources/autograding-command-grader@v1
         with:
           test-name: Case1
-          command: 'source .venv/bin/activate && pytest test_assignment.py::test_add'
+          command: 'source .venv/bin/activate && pytest -v test_assignment.py::test_add'
           timeout: 10
           max-score: 50
 
