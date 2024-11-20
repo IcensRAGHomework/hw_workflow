@@ -66,7 +66,25 @@ jobs:
           else
             echo "SCORE=0" >> $GITHUB_ENV
           fi
+          
+      # Step 6-1: Run tests and calculate score By autograding
+      - name: Run tests and calculate score By autograding
+        id: PytestCase
+        uses: classroom-resources/autograding-command-grader@v1
+        with:
+          test-name: Case1
+          command: 'pytest test_assignment.py::test_add  '
+          timeout: 10
+          max-score: 50
 
       # Step 7: Display score
       - name: Display score
         run: echo "Final Score:${{ env.SCORE }}"
+
+      # Step 7-1: Autograding Reporter
+      - name: Autograding Reporter
+        uses: classroom-resources/autograding-grading-reporter@v1
+        env:
+          PYTESTCASE_RESULTS: "${{steps.PytestCase.outputs.result}}"
+        with:
+          runners: PytestCase
