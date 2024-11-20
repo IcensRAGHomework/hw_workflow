@@ -15,15 +15,15 @@ jobs:
         run: |
           git clone https://${{ secrets.ORG_PAT_TOKEN }}@github.com/IcensRAGHomework/assignment-tests-.git temp-tests
 
-      # Step 1: Cache A - Check if requirements.txt has changed
+      # Step 1: Cache requirements.txt
       - name: Cache requirements.txt
         id: cache-requirements
         uses: actions/cache@v3
         with:
           path: requirements.txt
-          key: ${{ runner.os }}-requirements-${{ hashFiles('**/requirements.txt') }}
+          key: ${{ runner.os }}-requirements-${{ hashFiles('requirements.txt') }}
 
-      # Step 2: Cache B - Cache installed Python environment
+      # Step 2: Cache Python environment
       - name: Cache Python environment
         id: cache-env
         uses: actions/cache@v3
@@ -33,18 +33,18 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-env-
 
-      # Step 3: Install dependencies if requirements.txt has changed
+      # Step 3: Install dependencies if needed
       - name: Install dependencies
-        if: steps.cache-requirements.outputs.cache-hit != 'true'
+        if: steps.cache-env.outputs.cache-hit != 'true'
         run: |
           python -m venv .venv
           source .venv/bin/activate
           pip install --upgrade pip
           pip install -r requirements.txt
 
-      # Step 4: Save new Python environment to Cache B
-      - name: Update environment cache
-        if: steps.cache-requirements.outputs.cache-hit != 'true'
+      # Step 4: Save updated Python environment to cache
+      - name: Save updated Python environment
+        if: steps.cache-env.outputs.cache-hit != 'true'
         uses: actions/cache@v3
         with:
           path: .venv
@@ -56,8 +56,8 @@ jobs:
           source .venv/bin/activate
           cp temp-tests/test_assignment.py .
 
-      # Step 6: Run tests and calculate score
-      - name: Run tests and check for pass/fail
+      # Step 6: Run tests and check for pass/fail
+      - name: Run tests and calculate score
         id: test_step
         run: |
           source .venv/bin/activate
