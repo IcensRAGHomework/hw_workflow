@@ -24,11 +24,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          if ! pip check; then
-            pip install --cache-dir ~/.cache/pip -r requirements.txt
-          else
-            echo "All dependencies are already satisfied."
-          fi
+          pip install --cache-dir ~/.cache/pip --no-deps --disable-pip-version-check -r requirements.txt
 
       - name: Prepare tests
         run: |
