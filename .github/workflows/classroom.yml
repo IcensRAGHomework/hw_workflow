@@ -73,7 +73,7 @@ jobs:
         uses: classroom-resources/autograding-command-grader@v1
         with:
           test-name: Case1
-          command: 'pytest test_assignment.py::test_add  '
+          command: 'source .venv/bin/activate && pytest test_assignment.py::test_add'
           timeout: 10
           max-score: 50
 
