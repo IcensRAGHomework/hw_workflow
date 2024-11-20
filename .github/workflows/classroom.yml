@@ -24,7 +24,11 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install --cache-dir ~/.cache/pip --upgrade --disable-pip-version-check -r requirements.txt
+          if ! diff <(pip freeze | sort) <(pip install -r requirements.txt --dry-run | sort); then
+            pip install --cache-dir ~/.cache/pip --upgrade --disable-pip-version-check -r requirements.txt
+          else
+            echo "All dependencies are already installed."
+          fi
 
       - name: Prepare tests
         run: |
