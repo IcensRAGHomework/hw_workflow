@@ -71,7 +71,7 @@ jobs:
         uses: classroom-resources/autograding-command-grader@v1
         with:
           test-name: Case1
-          command: '.venv/bin/python -m pytest test_assignment.py::test_add'
+          command: '.venv/bin/python -m pytest test_assignment.py::test_hw01_1'
           timeout: 15
           max-score: 50
 
@@ -81,7 +81,7 @@ jobs:
         uses: classroom-resources/autograding-command-grader@v1
         with:
           test-name: Case2
-          command: '.venv/bin/python -m pytest test_assignment.py::test_sub'
+          command: '.venv/bin/python -m pytest test_assignment.py::test_hw01_2'
           timeout: 10
           max-score: 50
 
