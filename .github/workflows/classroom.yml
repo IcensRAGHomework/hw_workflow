@@ -56,17 +56,6 @@ jobs:
           source .venv/bin/activate
           cp temp-tests/test_assignment.py .
 
-      # Step 6: Run tests and check for pass/fail
-      - name: Run tests and calculate score
-        id: test_step
-        run: |
-          source .venv/bin/activate
-          if pytest test_assignment.py::test_add; then
-            echo "SCORE=30" >> $GITHUB_ENV
-          else
-            echo "SCORE=0" >> $GITHUB_ENV
-          fi
-
       - name: Debug Python Environment
         run: |
           echo "Python Version:"
@@ -78,22 +67,34 @@ jobs:
     
       # Step 6-1: Run tests and calculate score By autograding
       - name: Run tests and calculate score By autograding
-        id: PytestCase
+        id: PytestCase1
         uses: classroom-resources/autograding-command-grader@v1
         with:
           test-name: Case1
           command: '.venv/bin/python -m pytest test_assignment.py::test_add'
+          timeout: 15
+          max-score: 50
+
+      # Step 6-2: Run tests and calculate score for `test_sub`
+      - name: Run tests and calculate score By autograding (test_sub)
+        id: PytestCase2
+        uses: classroom-resources/autograding-command-grader@v1
+        with:
+          test-name: Case2
+          command: '.venv/bin/python -m pytest test_assignment.py::test_sub'
           timeout: 10
           max-score: 50
 
-      # Step 7: Display score
-      - name: Display score
-        run: echo "Final Score:${{ env.SCORE }}"
-
-      # Step 7-1: Autograding Reporter
+      - name: Debug Test Results
+        run: |
+          echo "Result for Case1: ${{ steps.PytestCase1.outputs.result || 0 }}"
+          echo "Result for Case2: ${{ steps.PytestCase2.outputs.result || 0 }}"
+  
+      # Step 7: Autograding Reporter
       - name: Autograding Reporter
         uses: classroom-resources/autograding-grading-reporter@v1
         env:
-          PYTESTCASE_RESULTS: "${{steps.PytestCase.outputs.result}}"
+          PYTESTCASE1_RESULTS: "${{steps.PytestCase1.outputs.result}}"
+          PYTESTCASE2_RESULTS: "${{steps.PytestCase2.outputs.result}}"
         with:
-          runners: PytestCase
+          runners: PytestCase1,PytestCase2
